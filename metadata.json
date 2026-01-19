@@ -1,0 +1,8 @@
+{
+  "name": "Vibezzy - The Guilt-Free Coding Companion",
+  "description": "A therapeutic coding environment that enforces healthy work-break habits with motivational memes and physical wellness reminders.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
