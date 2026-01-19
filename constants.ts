@@ -46,13 +46,15 @@ const toSortedNumericGifUrls = (
 // Focus block overlay GIFs (images/Motivational Memes/1.gif ... 11.gif)
 const MOTIVATION_GIF_MODULES = import.meta.glob<string>('./images/Motivational Memes/*.gif', {
   eager: true,
-  as: 'url',
+  query: '?url',
+  import: 'default',
 });
 export const MOTIVATION_GIFS = toSortedNumericGifUrls(MOTIVATION_GIF_MODULES, 1, 11);
 
 // Break session memes (images/Funny Mems/1.gif ... 9.gif)
 const FUNNY_MEME_GIF_MODULES = import.meta.glob<string>('./images/Funny Mems/*.gif', {
   eager: true,
-  as: 'url',
+  query: '?url',
+  import: 'default',
 });
 export const MEMES = toSortedNumericGifUrls(FUNNY_MEME_GIF_MODULES, 1, 9);
