@@ -1,0 +1,310 @@
+
+
+# **APP NAME: Vibezzy - The Guilt-Free Coding Companion**
+
+## **APP STORY**
+
+CodeBreak is a therapeutic coding environment designed for beginner developers who struggle with guilt around taking breaks and maintaining focus. Unlike traditional code editors that emphasize productivity at all costs, CodeBreak enforces healthy coding habits through structured focus-and-break sessions, validating rest as essential to the creative process.
+
+The app combines a minimalist code editor with a visual progress system that gamifies the coding journey. During focus periods, users code in a distraction-free environment while motivational GIFs subtly encourage them. When break time arrives, the app doesn't just suggest a break—it *mandates* it, offering two paths: physical wellness activities or meme-based mental refreshment.
+
+By forcing users into timed sessions and celebrating their completion, CodeBreak reframes coding as a sustainable marathon rather than an exhausting sprint. It's not about being the perfect IDE—it's about creating a space where beginners can code, breathe, and actually enjoy the learning process.
+
+---
+
+## **APP DESCRIPTION**
+
+**Purpose**: A beginner-friendly coding environment that enforces focus/break cycles with motivational content and guilt-free rest validation.
+
+**Core Philosophy**: 
+- Coding should be fun and sustainable
+- Breaks are productive, not lazy
+- Motivation through memes and validation, not pressure
+
+**Key Features**:
+- Customizable focus/break timer sessions (Pomodoro-style)
+- Clean, distraction-free text editor
+- Visual progress tracker with animated motivational overlays
+- Mandatory break activities (physical tasks or meme browsing)
+- Validating, encouraging messaging throughout
+
+---
+
+## **TECHNICAL SPECIFICATIONS & USER FLOW**
+
+### **SCENE 1: Welcome Screen**
+**Visual Layout**:
+- Full-screen background featuring the CodeBreak logo
+- "Start" button positioned in bottom-right corner
+- Clean, modern aesthetic
+
+**Interaction**:
+- Single action: Click "Start" → Navigate to Scene 2
+
+---
+
+### **SCENE 2: Session Configuration**
+**Input Fields** (displayed as form):
+
+1. **Username** 
+   - Type: Free text input
+   - Purpose: Personalization for Scene 3 and Scene 4
+   
+2. **Focus Duration**
+   - Type: Dropdown menu
+   - Options: 1 min (demo), 25 min, 60 min, 120 min
+   
+3. **Break Duration**
+   - Type: Dropdown menu
+   - Options: 1 min (demo), 5 min, 10 min, 25 min
+   
+4. **Number of Sessions**
+   - Type: Dropdown menu
+   - Options: 1, 2, 3
+   - Note: Each session = 1 focus block + 1 break block
+
+**Action Button**:
+- "Start Coding" button in bottom-right corner
+- On click: Save all values, navigate to Scene 3
+
+---
+
+### **SCENE 3: Main Coding Environment**
+
+**Layout Structure**: 
+Split-screen with 4:1 ratio (horizontal division)
+
+#### **SECTION 1 (Left Side - 80% width): Code Editor**
+- Plain text editor (textarea-style)
+- No syntax highlighting, no compilation, no advanced features
+- Just a clean space to write code
+- Text persists during break sessions (saved in idle state)
+
+#### **SECTION 2 (Right Side - 20% width): Vertical Progress Tracker**
+
+**Visual Design**:
+- Vertical column displaying focus/break blocks stacked top-to-bottom
+- Number of blocks = Number of sessions × 2 (focus + break per session)
+- Blocks arranged as: Focus 1 → Break 1 → Focus 2 → Break 2 → Focus 3 → Break 3
+
+**Block Behavior**:
+
+**FOCUS BLOCKS**:
+- **Animation**: Background color fills from top to bottom over the focus duration
+- **Overlay**: Motivational GIF plays on top of the filling background
+  - GIFs stored locally in `/assets/motivation/` folder
+  - Examples: thumbs-up animations, "you can do it" text GIFs, anime encouragement loops, coding-themed animations
+  - GIFs should cycle/change dynamically during the focus period (like a slideshow)
+- **Completion**: When focus timer expires, block disappears (deleted/removed from DOM)
+
+**BREAK BLOCKS**:
+- Become active only after their corresponding focus block completes
+- Trigger the Break Window (see below)
+- Background fills from top to bottom during break duration
+- Completion: When break timer expires, block disappears
+
+---
+
+### **BREAK WINDOW (Interrupts Scene 3)**
+
+When a focus block completes, the code editor enters **idle state** (background, not editable) and a new modal/overlay window appears.
+
+**Break Window Layout**:
+Two options presented as buttons/cards:
+
+#### **OPTION 1: Physical Activity**
+**Visual**:
+- Activity suggestion displayed as centered quote/text
+- Examples stored in a predefined list/JSON:
+  - "Go to the kitchen and drink a glass of water"
+  - "Step outside and get 5 minutes of sunlight"
+  - "Go touch some grass (literally!)"
+  - "Do 10 jumping jacks"
+  - "Stretch your arms above your head for 30 seconds"
+
+**Interaction**:
+- "Done" button in bottom-right corner
+- **Logic on Click**:
+  ```
+  IF remaining_break_time > 2 minutes:
+      Display another physical activity
+  ELSE IF remaining_break_time < 1 minute:
+      Close break window
+      Return to code editor (Section 1 active)
+      Start next focus block timer
+  ```
+
+#### **OPTION 2: Meme**
+**Visual**:
+- Random meme image displayed center-screen
+- Memes stored locally in `/assets/memes/` folder
+- Pull from internet meme culture (funny, relatable coding memes preferred)
+
+**Interaction**:
+- "Next" button in bottom-right corner
+- **Logic on Click**:
+  ```
+  IF remaining_break_time > 2 minutes:
+      Display another random meme
+  ELSE IF remaining_break_time < 1 minute:
+      Close break window
+      Return to code editor (Section 1 active)
+      Start next focus block timer
+  ```
+
+**Timer Logic**:
+- Break timer runs in background regardless of user's choice
+- Both options share the same termination logic based on remaining time
+
+---
+
+### **SCENE 4: Completion & Validation**
+
+**Trigger**: All focus and break blocks completed
+
+**Visual Layout**:
+- Full-screen overlay
+- Centered validation text with motivational messaging
+- Examples:
+  - "Amazing work, [Username]! You completed [X] coding sessions!"
+  - "You did it! Taking breaks makes you a *better* coder, not a lazier one."
+  - "Your code AND your brain thank you for showing up today!"
+
+**Rating Section**:
+- Prompt: "Rate your experience"
+- Three buttons displayed horizontally:
+  - "Great" 😊
+  - "IDK" 😐
+  - "Worst" 😞
+
+**Interaction**:
+- Clicking any rating button closes the entire app
+- No data persistence needed for this version
+- All windows/sessions terminate
+
+---
+
+## **AI AGENT INSTRUCTIONS**
+
+### **ASSETS REQUIRED**
+You will need to reference the following local asset folders:
+
+1. **`/assets/motivation/`** - Animated GIFs for focus block overlays
+   - File naming: `motivation_1.gif`, `motivation_2.gif`, etc.
+   - Minimum 5-10 GIFs for variety
+   
+2. **`/assets/memes/`** - Meme images for break sessions
+   - File naming: `meme_1.jpg`, `meme_2.jpg`, etc.
+   - Minimum 10-15 memes for variety
+
+3. **`/assets/logo.png`** - App logo for Scene 1 background
+
+### **DATA STRUCTURES**
+
+**Physical Activities Array/JSON**:
+```javascript
+const physicalActivities = [
+  "Go to the kitchen and drink a glass of water",
+  "Step outside and get 5 minutes of sunlight",
+  "Go touch some grass (literally!)",
+  "Do 10 jumping jacks",
+  "Stretch your arms above your head",
+  // Add 10-15 total activities
+];
+```
+
+**Validation Messages Array/JSON**:
+```javascript
+const validationMessages = [
+  "Amazing work, {username}! You completed {sessions} coding sessions!",
+  "You did it! Taking breaks makes you a *better* coder.",
+  "Your code AND your brain thank you for showing up today!",
+  // Add 5-8 variations
+];
+```
+
+### **CORE LOGIC REQUIREMENTS**
+
+1. **State Management**:
+   - Store user inputs from Scene 2 (username, focus duration, break duration, session count)
+   - Track current session number (1, 2, or 3)
+   - Track current phase (focus or break)
+   - Track remaining time in current block
+
+2. **Timer System**:
+   - Countdown timers for focus blocks (runs in background)
+   - Countdown timers for break blocks (runs in background)
+   - Timer continues even during break activity interactions
+
+3. **Visual Progress System**:
+   - Dynamically generate focus/break blocks based on session count
+   - Animate background fill from top-to-bottom matching timer duration
+   - Remove/hide completed blocks
+   - Cycle through motivational GIFs during focus blocks (change every 10-15 seconds)
+
+4. **Break Window Logic**:
+   - Pause code editor interaction when break starts
+   - Randomly select physical activity OR allow user to choose
+   - Randomly select meme from folder
+   - Check remaining break time before showing new content
+   - Transition back to focus when break ends
+
+5. **Navigation Flow**:
+   - Scene 1 → Scene 2 → Scene 3 → Scene 4
+   - No back buttons (enforce linear progression)
+
+### **STYLING GUIDELINES**
+
+- **Aesthetic**: Clean, modern, minimal
+- **Colors**: Calming palette (soft blues, greens, or purples recommended)
+- **Typography**: Friendly, readable fonts (avoid intimidating monospace everywhere)
+- **Buttons**: Clear, rounded corners, good hover states
+- **Focus blocks**: Gradual color transitions (e.g., light blue → deep blue)
+- **Break blocks**: Distinct color from focus (e.g., green or orange tones)
+
+### **TECHNICAL CONSTRAINTS**
+
+- **Framework**: Use React or vanilla JavaScript (your choice based on capabilities)
+- **No backend**: Everything runs client-side
+- **No persistence**: Data resets on app close/refresh
+- **No compilation**: Code editor is text-only, no execution
+- **Local assets only**: All images/GIFs loaded from local folders
+
+### **ACCESSIBILITY CONSIDERATIONS**
+
+- Ensure buttons have clear labels
+- Use sufficient color contrast
+- Make timers visually obvious
+- Provide clear feedback for all interactions
+
+### **PRIORITY FEATURES (Must-Have)**
+
+1. ✅ All 4 scenes functional
+2. ✅ Timer system working accurately
+3. ✅ Progress blocks animate correctly
+4. ✅ Break window logic (time-based content delivery)
+5. ✅ Code editor persists text during breaks
+
+### **NICE-TO-HAVE (If Time Permits)**
+
+- Sound effects for transitions
+- Confetti animation on Scene 4
+- Smooth transitions between scenes
+- Responsive design for different screen sizes
+
+---
+
+## **FINAL NOTES FOR AI AGENT**
+
+This is a **hackathon project focused on vibes over perfection**. Prioritize:
+- **Functionality** over pixel-perfect design
+- **Clear user flow** over advanced features
+- **Fun, encouraging UX** over professional polish
+
+The goal is to create a working prototype that makes beginner coders *feel good* about their coding sessions. Embrace the therapeutic, playful nature of the concept. If something breaks, make it fail gracefully with encouraging messages.
+
+Remember: **Breaks are features, not bugs.** 🎉
+
+---
+
+Does this capture everything you need? Should I adjust any section or add more technical details?

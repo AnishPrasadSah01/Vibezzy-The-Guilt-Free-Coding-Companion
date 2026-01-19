@@ -1,0 +1,50 @@
+i am crafting a really great prompt that i can feed to a vibe coding bots like replit and craft the following project as described below:
+tools used: validity for taking break sentences, emojis, meme, more if needed.
+
+the app is for beginner coders to help them get motivated during coding, to not feel guilty for taking breaks, and by leveraging meme as a mood enhancer we will be crafting a code editor, not perfect by any means, but usable, functionable, helpful, and most importantly, have fun. we force them into focus and break seasons. full flow of user journey in below:
+
+scene 1:
+
+first frame will welcome users, with a background image of our logo, then there is a "start" button on bottom right corner. click on that and we go to scene 2.
+
+scene 2:
+
+we introduce a time selection, so there are 4 input blocks
+1. user name (will be used in next scene) free text
+2. focus minutes (will be relevant in next scene) dropdown, 4 option, (1 min for demo only, 25 min, 60 min, 120 min)
+3. break meter (will be useful later logics) drop down, 4 options,( 1 min for demo, 5 min, 10 min, 25 min)
+4. no of focus session(each session contains, 1 focus + 1 break), dropdown, upto 3 sessions, 3 options, 1, 2, 3 sessions
+
+then on bottom right corner we have a "start coding" button, then we save those values and utilize in next scene, scene 3.
+
+scene 3:
+there is a full screen coding window but in right corner, instead of a copilot or code overview, we have a vertical window, maybe the window is divided into the ratio of 4:1 for coding section(we call it section 1) and a vertical progress bar section ( we call it section 2)
+
+in section 1
+it is just a text editor, no compiler or any tech for now, just editor,
+
+in section 2
+it is more dynamic, so the concept is like this:
+we have rectangles, due to vertical spacing, we have focus rectangles and break rectangles, as per the no of sessions, we will have focus + break blocks/rectangle,
+
+section 2 is a long vertical progress bar, the background is consuming the current block of either focus or break, the flow goes as:
+focus block:
+first we have a focus block which is slowly changing color of its background from top to bottom, as it is going down, there is a over lay image, a motivational meme, image, dynamically changed, like a gif, like eg "your can do it, a thumbs up gif", "random anime girl dance" etc. 
+
+followed by break block but the focus block vanishes, or pops away, deleted, once it hits the "end of focus", conditional logic applied for time.
+once the time for focus is terminated, the break timer starts, and with that  a new window, saving old text editor window in idle state, opens,
+the new window contains two options for the user to have a break, 
+1. "physical activity" - suggests quite cliché but good activity, eg "go to kitchen and drink a glass of water", "go outside to get 5 min of sunlight", "go touch some grass".
+further detail on physical activity window:
+	the text is in middle, like a quote, and there is a done button on bottom right corner, which then calculates how much time is remaining in break session, and if it is more then 2 min then it gives another task, and if the time is less then a minute then it terminates the break session and into focus session
+2. "meme" - it will put out random, funny memes from the internet in the middle of the window, then there is a next button on bottom right corner, and it runs the logic of either to terminate or send another meme based on break time remaining, the logic is:  if it is more then 2 min then it gives another task, and if the time is less then a minute then it terminates the break session and into focus session. 
+
+then as the focus or break time is terminated or the previous termination logic is met, the block is gone, deleted, terminated.
+then we move on with next focus session, focus 2, then break 2, and forth until every focus session are over.
+
+when all focus sessions, focus blocks and break blocks are terminated, then a new scene pops, ending scene:
+scene 4:
+if contains a validation + motivatoional + chearing text, at the center, and a "rate your experience"
+with "great", "idk" and "worst" buttons, and it all terminates, all windows closed, 
+remember, this app is to let users code, using therapy style validation, and a motivation to code, a plain coding environment to just, code...
+
