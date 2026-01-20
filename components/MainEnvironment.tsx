@@ -15,6 +15,7 @@ import {
   savePersistedAppState,
 } from "../persistence";
 import RefreshGuardModal from "./RefreshGuardModal";
+import RestartConfirmModal from "./RestartConfirmModal";
 
 interface MainEnvironmentProps {
   config: UserSessionConfig;
@@ -157,6 +158,7 @@ const MainEnvironment: React.FC<MainEnvironmentProps> = ({
     hydrated.state.fileExtension,
   );
   const [isRefreshGuardOpen, setIsRefreshGuardOpen] = useState(false);
+  const [isRestartConfirmOpen, setIsRestartConfirmOpen] = useState(false);
   const fileBaseNameRef = useRef(fileBaseName);
   useEffect(() => {
     fileBaseNameRef.current = fileBaseName;
@@ -304,13 +306,6 @@ const MainEnvironment: React.FC<MainEnvironmentProps> = ({
     remainingSeconds,
   ]);
 
-  const hardRefresh = useCallback(() => {
-    clearPersistedAppState();
-    const url = new URL(window.location.href);
-    url.searchParams.set("hard", Date.now().toString());
-    window.location.replace(url.toString());
-  }, []);
-
   const restartSession = useCallback(() => {
     clearPersistedAppState();
     onRestart?.();
@@ -380,7 +375,16 @@ const MainEnvironment: React.FC<MainEnvironmentProps> = ({
         onCancel={() => setIsRefreshGuardOpen(false)}
         onDownload={downloadNow}
         onSaveAndRefresh={saveAndRefresh}
-        onHardRefresh={hardRefresh}
+      />
+
+      <RestartConfirmModal
+        isOpen={isRestartConfirmOpen}
+        onCancel={() => setIsRestartConfirmOpen(false)}
+        onDownload={downloadNow}
+        onRestart={() => {
+          setIsRestartConfirmOpen(false);
+          restartSession();
+        }}
       />
 
       <div className="w-4/5 h-full border-r border-slate-200">
@@ -394,7 +398,7 @@ const MainEnvironment: React.FC<MainEnvironmentProps> = ({
           onFileExtensionChange={setFileExtension}
           onDownload={downloadNow}
           onOpenRefreshMenu={() => setIsRefreshGuardOpen(true)}
-          onRestart={restartSession}
+          onRestart={() => setIsRestartConfirmOpen(true)}
         />
       </div>
 

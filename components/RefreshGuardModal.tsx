@@ -5,7 +5,6 @@ interface RefreshGuardModalProps {
   onCancel: () => void;
   onDownload: () => void;
   onSaveAndRefresh: () => void;
-  onHardRefresh: () => void;
 }
 
 const RefreshGuardModal: React.FC<RefreshGuardModalProps> = ({
@@ -13,7 +12,6 @@ const RefreshGuardModal: React.FC<RefreshGuardModalProps> = ({
   onCancel,
   onDownload,
   onSaveAndRefresh,
-  onHardRefresh,
 }) => {
   if (!isOpen) return null;
 
@@ -44,14 +42,6 @@ const RefreshGuardModal: React.FC<RefreshGuardModalProps> = ({
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-2xl transition"
           >
             Save and refresh
-          </button>
-
-          <button
-            type="button"
-            onClick={onHardRefresh}
-            className="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 px-4 rounded-2xl transition"
-          >
-            Hard refresh
           </button>
 
           <button

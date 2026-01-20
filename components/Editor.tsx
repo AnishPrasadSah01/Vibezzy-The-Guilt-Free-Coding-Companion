@@ -137,7 +137,7 @@ const Editor: React.FC<EditorProps> = ({
                   onChange={(e) => {
                     const next = e.target.value === "txt" ? "txt" : "md";
                     onFileExtensionChange(next);
-                    if (next === "txt") setShowPreview(false);
+                    if (next === "txt") setViewMode("EDIT");
                   }}
                   className="text-slate-600 bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
                   aria-label="File extension"
