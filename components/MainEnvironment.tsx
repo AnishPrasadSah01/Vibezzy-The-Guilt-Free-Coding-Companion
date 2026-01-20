@@ -22,11 +22,20 @@ const MainEnvironment: React.FC<MainEnvironmentProps> = ({
   const [code, setCode] = useState("");
   const codeRef = useRef("");
   const hasAutoDownloadedRef = useRef(false);
+  const hasAdvancedThisBlockRef = useRef(false);
   const [activeBlockIndex, setActiveBlockIndex] = useState(0);
   const [remainingSeconds, setRemainingSeconds] = useState(
     config.focusMinutes * 60,
   );
   const [isBreakOpen, setIsBreakOpen] = useState(false);
+
+  const [fileBaseName, setFileBaseName] = useState(
+    `vibezzy_editor_${(config.username || "coder").toLowerCase()}`,
+  );
+  const fileBaseNameRef = useRef(fileBaseName);
+  useEffect(() => {
+    fileBaseNameRef.current = fileBaseName;
+  }, [fileBaseName]);
 
   // Generate the linear sequence of blocks
   const blocks: ProgressBlock[] = useMemo(() => {
@@ -57,14 +66,18 @@ const MainEnvironment: React.FC<MainEnvironmentProps> = ({
     hasAutoDownloadedRef.current = true;
 
     const content = codeRef.current ?? "";
-    const safeUsername = (config.username || "coder")
-      .trim()
-      .toLowerCase()
-      .replace(/[^a-z0-9_-]+/g, "_")
-      .replace(/^_+|_+$/g, "");
-
     const stamp = new Date().toISOString().slice(0, 19).replace(/[T:]/g, "-");
-    const fileName = `vibezzy_${safeUsername || "coder"}_${stamp}.txt`;
+
+    const sanitizeFileBase = (raw: string) => {
+      const withoutExt = (raw || "").trim().replace(/\.txt$/i, "");
+      const noIllegalChars = withoutExt.replace(/[<>:"/\\|?*\x00-\x1F]/g, "_");
+      const collapsed = noIllegalChars.replace(/\s+/g, " ").trim();
+      const safe = collapsed.replace(/[ .]+$/g, "").replace(/^[ .]+/g, "");
+      return safe.slice(0, 80);
+    };
+
+    const base = sanitizeFileBase(fileBaseNameRef.current);
+    const fileName = `${base || "vibezzy_session"}_${stamp}.txt`;
 
     const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
@@ -75,7 +88,7 @@ const MainEnvironment: React.FC<MainEnvironmentProps> = ({
     link.click();
     link.remove();
     URL.revokeObjectURL(url);
-  }, [config.username]);
+  }, []);
 
   // Logic to move to next block
   const goToNextBlock = useCallback(() => {
@@ -103,21 +116,27 @@ const MainEnvironment: React.FC<MainEnvironmentProps> = ({
     }
   }, [activeBlockIndex, blocks, onComplete, autoDownloadCodeAsTxt]);
 
-  // Timer Effect
+  // Ensure a block only advances once (prevents skipping blocks)
+  useEffect(() => {
+    hasAdvancedThisBlockRef.current = false;
+  }, [activeBlockIndex]);
+
+  // Timer Effect (pure decrement; block-advance handled in a separate effect)
   useEffect(() => {
     const timer = setInterval(() => {
-      setRemainingSeconds((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          goToNextBlock();
-          return 0;
-        }
-        return prev - 1;
-      });
+      setRemainingSeconds((prev) => Math.max(prev - 1, 0));
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [activeBlockIndex, goToNextBlock]);
+  }, [activeBlockIndex]);
+
+  // Advance when timer hits zero (single-shot)
+  useEffect(() => {
+    if (remainingSeconds !== 0) return;
+    if (hasAdvancedThisBlockRef.current) return;
+    hasAdvancedThisBlockRef.current = true;
+    goToNextBlock();
+  }, [remainingSeconds, goToNextBlock]);
 
   const handleFinishBreak = () => {
     // If the user finishes break activity early (logic in modal)
@@ -138,6 +157,8 @@ const MainEnvironment: React.FC<MainEnvironmentProps> = ({
           onChange={handleCodeChange}
           disabled={activeBlock?.type === "BREAK"}
           username={config.username}
+          fileBaseName={fileBaseName}
+          onFileBaseNameChange={setFileBaseName}
         />
       </div>
 
@@ -148,6 +169,15 @@ const MainEnvironment: React.FC<MainEnvironmentProps> = ({
           remainingSeconds={remainingSeconds}
         />
       </div>
+
+      {activeBlock?.type === "BREAK" && !isBreakOpen && (
+        <button
+          onClick={() => setIsBreakOpen(true)}
+          className="absolute bottom-6 left-6 z-40 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-5 rounded-full shadow-lg transform transition active:scale-95"
+        >
+          Open Refreshment
+        </button>
+      )}
 
       {isBreakOpen && activeBlock?.type === "BREAK" && (
         <BreakModal
