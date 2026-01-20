@@ -45,10 +45,10 @@ export const MENTAL_REFRESHERS = [
 ];
 
 export const VALIDATION_MESSAGES = [
-  "Amazing work, {username}! You completed {sessions} coding sessions!",
+  "Amazing work! You completed {sessions} coding sessions!",
   "You did it! Taking breaks makes you a *better* coder.",
   "Your code AND your brain thank you for showing up today!",
-  "Session complete! Your discipline is inspiring, {username}.",
+  "Session complete! Your discipline is inspiring.",
   "You prioritized your wellbeing while learning. That's a pro move."
 ];
 
